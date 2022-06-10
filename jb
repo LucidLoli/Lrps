@@ -1,0 +1,354 @@
+S		:=	F_bc
+F_bc		:=	F_bc <-> F_cond | F_cond
+F_cond		:=	F_or --> F_cond | F_or
+F_or		:=	F_or \/ F_and | F_and
+F_and		:=	F_and /\ Elem | Elem
+Elem		:=	( F_bc ) | p | 1 | 0
+
+
+
+S := B
+B := B iff C | C
+C := R fi C | R
+R := R or A | A
+A := A and E | E
+E := ( B ) | p | 1 | 0
+
+
+FOLLOW
+
+S	{ $ }
+B	{ iff, ), $ }
+C	{ iff, ), $ }
+R	{ or , iff, ), $ }
+A	{ and , or , iff, ), $ }
+E	{ and , or , iff, ), $ }
+
+LR(1) 项目集
+
+# I1
+S -> ·B,	$
+B -> ·B iff C,	$/iff/)
+B -> ·C,	$/iff/)
+C -> ·R fi C,	$/iff/)
+C -> ·R,	$/iff/)
+R -> ·R or A,	$/iff/or/)/fi
+R -> ·A,	$/iff/or/)/fi
+A -> ·A and E,	$/iff/or/and/)/fi
+A -> ·E,	$/iff/or/and/)/fi
+E -> ·( B ),	$/iff/or/and/)/fi
+E -> ·p,	$/iff/or/and/)/fi
+
+: B > I2
+: C > I3
+: R > I4
+: A > I5
+: E > I6
+: ( > I7
+: p > I8
+
+
+# I2
+S -> B·,	$
+B -> B ·iff C,	$/iff/)
+
+: iff > I9
+
+# I3
+B -> C·,	$/iff/)
+
+# I4
+C -> R ·fi C,	$/iff/)
+C -> R·,	$/iff/)
+R -> R ·or A,	$/iff/or/)/fi
+
+: fi > I10
+: or > I+32
+
+# I5
+R -> A·,	$/iff/or/)/fi
+A -> A ·and E,	$/iff/or/and/)/fi
+
+: and > I+33
+
+# I6
+A -> E·,	$/iff/or/and/)/fi
+
+# I7
+E -> ( ·B ),	$/iff/or/and/)/fi
+B -> ·B iff C,	iff/)
+B -> ·C, 	iff/)
+C -> ·R fi C,	iff/)
+C -> ·R,	iff/)
+R -> ·R or A,	iff/)/fi/or
+R -> ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: B > I+34
+: C > I+35
+: R > I+36
+: A > I+37
+: E > I+38
+: ( > I+39
+: p > I+40
+
+# I8
+E -> p·,	$/iff/or/and/)/fi
+
+# I9
+B -> B iff ·C,	$/iff/)
+C -> ·R fi C,	$/iff/)
+C -> ·R,	$/iff/)
+R -> ·R or A,	$/iff/)/fi/or
+R -> ·A,	$/iff/)/fi/or
+A -> ·A and E,	$/iff/)/fi/or/and
+A -> ·E,	$/iff/)/fi/or/and
+E -> ·( B ),	$/iff/)/fi/or/and
+E -> ·p,	$/iff/)/fi/or/and
+
+: C > I+41
+: R > I4
+: A > I+42
+: E > I+43
+: ( > I7
+: p > I+44
+
+# I10
+C -> R fi ·C,	$/iff/)
+C -> ·R fi C,	$/iff/)
+C -> ·R,	$/iff/)
+R -> ·R or A,	$/iff/)/fi/or
+R -> ·A,	$/iff/)/fi/or
+A -> ·A and E,	$/iff/)/fi/or/and
+A -> ·E,	$/iff/)/fi/or/and
+E -> ·( B ),	$/iff/)/fi/or/and
+E -> ·p,	$/iff/)/fi/or/and
+
+: C > I+45
+: R > I4
+: A > I+42
+: E > I+43
+: ( > I7
+: p > I+44
+
+# I+32
+R -> R or ·A,	$/iff/or/)/fi
+A -> ·A and E,	$/iff/or/)/fi/and
+A -> ·E,	$/iff/or/)/fi/and
+E -> ·( B ),	$/iff/or/)/fi/and
+E -> ·p,	$/iff/or/)/fi/and
+
+: A > I+46
+: E > I6
+: ( > I7
+: p > I8
+
+# I+33
+A -> A and ·E,	$/iff/or/and/)/fi
+E -> ·( B ),	$/iff/or/and/)/fi
+E -> ·p,	$/iff/or/and/)/fi
+
+: E > I+59
+: ( > I7
+: p > I8
+
+# I+34
+E -> ( B ·),	$/iff/or/and/)/fi
+B -> B ·iff C,	iff/)
+
+: ) > I+47
+: iff > I+56
+
+# I+35
+B -> C·, 	iff/)
+
+# I+36
+C -> R ·fi C,	iff/)
+C -> R·,	iff/)
+R -> R ·or A, 	iff/)/fi/or
+
+: fi > I+48
+: or > I+49
+
+# I+37
+R -> A·, 	iff/)/fi/or
+A -> A ·and E, 	iff/)/fi/or/and
+
+: and > I+50
+
+# I+38
+A -> E·, 	iff/)/fi/or/and
+
+# I+39
+E -> ( ·B ),	iff/)/fi/or/and
+B -> ·B iff C,	)/iff
+B -> ·C,	)/iff
+C -> ·R fi C,	)/iff
+C -> ·R,	)/iff
+R -> ·R or A,	iff/)/fi/or
+R -> ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: B > I+51
+: C > I+35
+: R > I+36
+: A > I+37
+: E > I+38
+: ( > I+39
+: p > I+40
+
+# I+40
+E -> p·, 	iff/)/fi/or/and
+
+# I+41
+B -> B iff C·,	$/iff/)
+
+# I+42
+R -> A·,	$/iff/)/fi/or
+A -> A ·and E,	$/iff/)/fi/or/and
+
+: and > I+33
+
+# I+43
+A -> E·,	$/iff/)/fi/or/and
+
+# I+44
+E -> p·,	$/iff/)/fi/or/and
+
+# I+45
+C -> R fi C·,	$/iff/)
+
+# I+46
+R -> R or A·,	$/iff/or/)/fi
+A -> A ·and E,	$/iff/or/)/fi/and
+
+: and > I+33
+
+# I+47
+E -> ( B )·,	$/iff/or/and/)/fi
+
+# I+48
+C -> R fi ·C,	iff/)
+C -> ·R fi C,	)/iff
+C -> ·R,	)/iff
+R -> ·R or A,	iff/)/fi/or
+R -> ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: C > I+52
+: R > I+36
+: A > I+37
+: E > I+38
+: ( > I+39
+: p > I+40
+
+# I+49
+R -> R or ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: A > I+53
+: E > I+38 
+: ( > I+39
+: p > I+40
+
+# I+50
+A -> A and ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: E > I+54
+: ( > I+39
+: p > I+40
+
+# I+51
+E -> ( B ·),	iff/)/fi/or/and
+B -> B ·iff C,	)/iff
+
+: ) > I+55
+: iff > I+56
+
+# I+52
+C -> R fi C·,	iff/)
+
+# I+53
+R -> R or A·,	iff/)/fi/or
+A -> A ·and E,	iff/)/fi/or/and
+
+: and > I+50
+
+# I+54
+A -> A and E·,	iff/)/fi/or/and
+
+# I+55
+E -> ( B )·,	iff/)/fi/or/and
+
+# I+56
+B -> B iff ·C,	)/iff
+C -> ·R fi C,	iff/)
+C -> ·R,	iff/)
+R -> ·R or A,	iff/)/fi/or
+R -> ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: C > I+60
+: R > I+36
+: A > I+37
+: E > I+38
+: ( > I+39
+: p > I+40
+
+# I+57
+E -> ( ·B ),	$/iff/)/fi/and
+B -> ·B iff C,	iff/)
+B -> ·C, 	iff/)
+C -> ·R fi C,	iff/)
+C -> ·R,	iff/)
+R -> ·R or A,	iff/)/fi/or
+R -> ·A,	iff/)/fi/or
+A -> ·A and E,	iff/)/fi/or/and
+A -> ·E,	iff/)/fi/or/and
+E -> ·( B ),	iff/)/fi/or/and
+E -> ·p,	iff/)/fi/or/and
+
+: B > I+61
+: C > I+35
+: R > I+36
+: A > I+37
+: E > I+38
+: ( > I+39
+: p > I+40
+
+# I+58
+E -> p·,	$/iff/)/fi/and
+
+# I+59
+A -> A and E·,	$/iff/)/fi/or/and
+
+# I+60
+B -> B iff C·,	)/iff
+
+# I+61
+E -> ( B ·),	$/iff/)/fi/and
+B -> B ·iff C,	iff/)
+
+: ) > I+62
+: iff > I+56
+
+# I+62
+E -> ( B )·,	$/iff/)/fi/and
+
